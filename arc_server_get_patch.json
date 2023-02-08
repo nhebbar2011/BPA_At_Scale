@@ -4,10 +4,6 @@
   "parameters": {
     "arcServerId": {
       "type": "string"
-    },
-    "arcExtensionBody": {
-      "type": "object",
-      "defaultValue": "[reference(concat(resourceGroup().id, '/providers/Microsoft.HybridCompute/machines/', parameters('arcServerId'), '/extensions/WindowsAgent.SqlServer'), '2022-03-10', 'Full')]"
     }
   },
   "functions": [],
@@ -16,17 +12,33 @@
   },
   "resources": [
     {
+      "name": "linkedTemplate",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2021-04-01",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "relativePath": "https://github.com/nhebbar2011/sample_templates/blob/master/linked_template.json"
+        },
+        "parameters": {
+          "arcServerId": {
+            "value": "[parameters('arcServerId')]"
+          }
+        }
+      }
+    },
+    {
       "apiVersion": "2022-03-10",
       "name": "[concat(parameters('arcServerId'), '/WindowsAgent.SqlServer')]",
       "type": "Microsoft.HybridCompute/machines/extensions",
       "location": "eastus2euap",
       "properties": {
-        "publisher": "[parameters('arcExtensionBody').agentExtensionBody.properties.publisher]",
-        "type": "[parameters('arcExtensionBody').agentExtensionBody.properties.type]",
-        "typeHandlerVersion": "[parameters('arcExtensionBody').agentExtensionBody.properties.typeHandlerVersion]",
-        "autoUpgradeMinorVersion": "[parameters('arcExtensionBody').agentExtensionBody.properties.autoUpgradeMinorVersion]",
-        "enableAutomaticUpgrade": "[parameters('arcExtensionBody').agentExtensionBody.properties.enableAutomaticUpgrade]",
-        "settings": "[parameters('arcExtensionBody').agentExtensionBody.properties.settings]"
+        "publisher": "[reference('linkedTemplate').outputs.agentExtensionBody.properties.publisher]",
+        "type": "[reference('linkedTemplate').outputs.agentExtensionBody.properties.type]",
+        "typeHandlerVersion": "[reference('linkedTemplate').outputs.agentExtensionBody.properties.typeHandlerVersion]",
+        "autoUpgradeMinorVersion": "[reference('linkedTemplate').outputs.agentExtensionBody.properties.autoUpgradeMinorVersion]",
+        "enableAutomaticUpgrade": "[reference('linkedTemplate').outputs.agentExtensionBody.properties.enableAutomaticUpgrade]",
+        "settings": "[reference('linkedTemplate').outputs.agentExtensionBody.properties.settings]"
       }
     }
   ],
