@@ -10,7 +10,7 @@
     "variables": {},
     "resources": [],
     "outputs": {
-        "arcExtensionBody": {
+        "agentExtensionBody": {
             "type": "object",
             "value": "[reference(concat(resourceGroup().id, '/providers/Microsoft.HybridCompute/machines/', parameters('arcServerId'), '/extensions/WindowsAgent.SqlServer'), '2022-03-10', 'Full')]"
         }

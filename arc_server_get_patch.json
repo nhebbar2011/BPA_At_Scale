@@ -18,7 +18,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-        "relativePath": "linked_template.json"
+          "relativePath": "linked_template.json"
         },
         "parameters": {
           "arcServerId": {
@@ -31,14 +31,14 @@
       "apiVersion": "2022-03-10",
       "name": "[concat(parameters('arcServerId'), '/WindowsAgent.SqlServer')]",
       "type": "Microsoft.HybridCompute/machines/extensions",
-      "location": "eastus2euap",
+      "location": "[resourceGroup().location]",
       "properties": {
-        "publisher": "[reference('linkedTemplate').outputs.agentExtensionBody.properties.publisher]",
-        "type": "[reference('linkedTemplate').outputs.agentExtensionBody.properties.type]",
-        "typeHandlerVersion": "[reference('linkedTemplate').outputs.agentExtensionBody.properties.typeHandlerVersion]",
-        "autoUpgradeMinorVersion": "[reference('linkedTemplate').outputs.agentExtensionBody.properties.autoUpgradeMinorVersion]",
-        "enableAutomaticUpgrade": "[reference('linkedTemplate').outputs.agentExtensionBody.properties.enableAutomaticUpgrade]",
-        "settings": "[reference('linkedTemplate').outputs.agentExtensionBody.properties.settings]"
+        "publisher": "[reference('linkedTemplate').outputs.agentExtensionBody.value.properties.publisher]",
+        "type": "[reference('linkedTemplate').outputs.agentExtensionBody.value.properties.type]",
+        "typeHandlerVersion": "[reference('linkedTemplate').outputs.agentExtensionBody.value.properties.typeHandlerVersion]",
+        "autoUpgradeMinorVersion": "[reference('linkedTemplate').outputs.agentExtensionBody.value.properties.autoUpgradeMinorVersion]",
+        "enableAutomaticUpgrade": "[reference('linkedTemplate').outputs.agentExtensionBody.value.properties.enableAutomaticUpgrade]",
+        "settings": "[reference('linkedTemplate').outputs.agentExtensionBody.value.properties.settings]"
       }
     }
   ],
