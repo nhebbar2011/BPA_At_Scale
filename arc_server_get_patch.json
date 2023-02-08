@@ -8,7 +8,24 @@
   },
   "functions": [],
   "variables": {
-
+    "assessmentSettings": {
+        "AssessmentSettings": {
+          "Enable": true,
+          "RunImmediately": false,
+          "schedule": {
+            "dayOfWeek": "Sunday",
+            "Enable": true,
+            "monthlyOccurrence": null,
+            "StartDate": null,
+            "startTime": "00:00",
+            "WeeklyInterval": 1
+          },
+          "WorkspaceResourceId": "/subscriptions/a5082b19-8a6e-4bc5-8fdd-8ef39dfebc39/resourcegroups/nhebbar-bpa-policy-test/providers/microsoft.operationalinsights/workspaces/bpa-la",
+          "WorkspaceLocation": "eastus",
+          "ResourceNamePrefix": "sqlbpa-bpa-la--k4cju4v-260141",
+          "settingsSaveTime": 1675768253
+        }
+    }
   },
   "resources": [
     {
@@ -38,7 +55,7 @@
         "typeHandlerVersion": "[reference('linkedTemplate').outputs.agentExtensionBody.value.properties.typeHandlerVersion]",
         "autoUpgradeMinorVersion": "[reference('linkedTemplate').outputs.agentExtensionBody.value.properties.autoUpgradeMinorVersion]",
         "enableAutomaticUpgrade": "[reference('linkedTemplate').outputs.agentExtensionBody.value.properties.enableAutomaticUpgrade]",
-        "settings": "[reference('linkedTemplate').outputs.agentExtensionBody.value.properties.settings]"
+        "settings": "[union(reference('linkedTemplate').outputs.agentExtensionBody.value.properties.settings, variables('assessmentSettings'))]"
       }
     }
   ],
