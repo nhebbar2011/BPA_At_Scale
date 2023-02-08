@@ -1,0 +1,20 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+         "arcServerId": {
+            "type": "string"
+        }
+    },
+    "functions": [],
+    "variables": {
+         "agentExtensionId": "[concat(resourceGroup().id, '/providers/Microsoft.HybridCompute/machines/', parameters('arcServerId'), '/extensions/WindowsAgent.SqlServer')]"
+    },
+    "resources": [],
+    "outputs": {
+        "agentExtensionBody": {
+            "value": "[reference(variables('agentExtensionId'), '2022-03-10', 'Full')]",
+            "type": "object"
+        }
+    }
+}

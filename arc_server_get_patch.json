@@ -1,0 +1,36 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "arcServerId": {
+      "type": "string"
+    },
+    "arcExtensionBody": {
+      "type": "object",
+      "defaultValue": "[reference(concat(resourceGroup().id, '/providers/Microsoft.HybridCompute/machines/', parameters('arcServerId'), '/extensions/WindowsAgent.SqlServer'), '2022-03-10', 'Full')]"
+    }
+  },
+  "functions": [],
+  "variables": {
+
+  },
+  "resources": [
+    {
+      "apiVersion": "2022-03-10",
+      "name": "[concat(parameters('arcServerId'), '/WindowsAgent.SqlServer')]",
+      "type": "Microsoft.HybridCompute/machines/extensions",
+      "location": "eastus2euap",
+      "properties": {
+        "publisher": "[parameters('arcExtensionBody').agentExtensionBody.properties.publisher]",
+        "type": "[parameters('arcExtensionBody').agentExtensionBody.properties.type]",
+        "typeHandlerVersion": "[parameters('arcExtensionBody').agentExtensionBody.properties.typeHandlerVersion]",
+        "autoUpgradeMinorVersion": "[parameters('arcExtensionBody').agentExtensionBody.properties.autoUpgradeMinorVersion]",
+        "enableAutomaticUpgrade": "[parameters('arcExtensionBody').agentExtensionBody.properties.enableAutomaticUpgrade]",
+        "settings": "[parameters('arcExtensionBody').agentExtensionBody.properties.settings]"
+      }
+    }
+  ],
+  "outputs": {
+
+  }
+}
