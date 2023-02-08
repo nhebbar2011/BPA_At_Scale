@@ -18,7 +18,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "relativePath": "https://github.com/nhebbar2011/sample_templates/blob/master/linked_template.json"
+        "relativePath": "linked_template.json"
         },
         "parameters": {
           "arcServerId": {
