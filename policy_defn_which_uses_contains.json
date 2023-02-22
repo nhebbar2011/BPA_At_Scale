@@ -1,0 +1,143 @@
+{
+    "properties": {
+      "displayName": "Configure Arc-enabled machines with SQL Server extension installed to enable BPA - Only settings update",
+      "policyType": "Custom",
+      "mode": "Indexed",
+      "description": "If a host is Arc-enabled and has SQL Server extension installed, the assessment settings should be updated",
+      "metadata": {
+        "createdBy": "ad5e98c3-054e-4e5a-8b37-37b4307b80b4",
+        "createdOn": "2023-02-14T09:22:32.5228937Z",
+        "updatedBy": "ad5e98c3-054e-4e5a-8b37-37b4307b80b4",
+        "updatedOn": "2023-02-22T10:10:44.9400769Z"
+      },
+      "parameters": {
+        "effect": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Effect",
+            "description": "Enable or disable the execution of the policy"
+          },
+          "allowedValues": [
+            "DeployIfNotExists",
+            "Disabled"
+          ],
+          "defaultValue": "DeployIfNotExists"
+        }
+      },
+      "policyRule": {
+        "if": {
+          "allOf": [
+            {
+              "field": "type",
+              "equals": "Microsoft.HybridCompute/machines"
+            }
+          ]
+        },
+        "then": {
+          "effect": "[parameters('effect')]",
+          "details": {
+            "type": "Microsoft.HybridCompute/machines/extensions",
+            "roleDefinitionIds": [
+              "/providers/Microsoft.Authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293",
+              "/providers/Microsoft.Authorization/roleDefinitions/18d7d88d-d35e-4fb5-a5c3-7773c20a72d9"
+            ],
+            "existenceCondition": {
+              "allOf": [
+                {
+                  "field": "Microsoft.HybridCompute/machines/extensions/type",
+                  "equals": "WindowsAgent.SqlServer"
+                },
+                {
+                  "field": "Microsoft.HybridCompute/machines/extensions/settings",
+                  "contains": "AssessmentSettings"
+                }
+              ]
+            },
+            "deployment": {
+              "properties": {
+                "mode": "incremental",
+                "template": {
+                  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "parameters": {
+                    "vmName": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string"
+                    },
+                    "agentName": {
+                      "type": "string"
+                    }
+                  },
+                  "variables": {
+                    "vmExtensionName": "[parameters('agentName')]",
+                    "vmExtensionPublisher": "Microsoft.AzureData",
+                    "vmExtensionType": "[parameters('agentName')]"
+                  },
+                  "resources": [
+                    {
+                      "name": "[concat(parameters('vmName'), '/', variables('vmExtensionName'))]",
+                      "type": "Microsoft.HybridCompute/machines/extensions",
+                      "location": "[parameters('location')]",
+                      "apiVersion": "2019-12-12",
+                      "properties": {
+                        "publisher": "[variables('vmExtensionPublisher')]",
+                        "type": "[variables('vmExtensionType')]",
+                        "settings": {
+                          "SqlManagement": {
+                            "IsEnabled": true
+                          },
+                          "AssessmentSettings": {
+                            "Enable": true,
+                            "RunImmediately": false,
+                            "schedule": {
+                              "dayOfWeek": "Monday",
+                              "Enable": true,
+                              "monthlyOccurrence": null,
+                              "StartDate": null,
+                              "startTime": "00:00",
+                              "WeeklyInterval": 1
+                            },
+                            "WorkspaceResourceId": "/subscriptions/a5082b19-8a6e-4bc5-8fdd-8ef39dfebc39/resourceGroups/nishanthTestingRg2/providers/Microsoft.OperationalInsights/workspaces/testing-custom-table-dep",
+                            "WorkspaceLocation": "westus",
+                            "ResourceNamePrefix": "sqlbpa-testing-cust--tf0jtue-378015",
+                            "settingsSaveTime": 1676097067
+                          },
+                          "ExcludedInstances": [],
+                          "LicenseType": "PAYG"
+                        }
+                      }
+                    }
+                  ],
+                  "outputs": {}
+                },
+                "parameters": {
+                  "vmName": {
+                    "value": "[field('name')]"
+                  },
+                  "location": {
+                    "value": "[field('location')]"
+                  },
+                  "agentName": {
+                    "value": "[if(startsWith(field('Microsoft.HybridCompute/machines/osName'),'windows'), 'WindowsAgent.SqlServer', 'LinuxAgent.SqlServer')]"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "id": "/subscriptions/a5082b19-8a6e-4bc5-8fdd-8ef39dfebc39/providers/Microsoft.Authorization/policyDefinitions/3fde4f5b-d041-4ef5-9fd8-9263de76372b",
+    "type": "Microsoft.Authorization/policyDefinitions",
+    "name": "3fde4f5b-d041-4ef5-9fd8-9263de76372b",
+    "systemData": {
+      "createdBy": "nhebbar@microsoft.com",
+      "createdByType": "User",
+      "createdAt": "2023-02-14T09:22:32.4754853Z",
+      "lastModifiedBy": "nhebbar@microsoft.com",
+      "lastModifiedByType": "User",
+      "lastModifiedAt": "2023-02-22T10:10:44.8238566Z"
+    }
+  }
